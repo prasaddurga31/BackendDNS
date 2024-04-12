@@ -93,7 +93,7 @@ async function createUserHostedZone(req, res) {
 
     const response = await route53.createHostedZone(params).promise();
 
-    // Save the hosted zone information to the database
+  
     const { HostedZone } = response;
     const { Id, Name } = HostedZone;
 
@@ -117,7 +117,7 @@ async function deleteUserHostedZone(req, res) {
   const { userId, hostedZoneId } = req.query;
 
   try {
-    // Check if the user has permission to delete the hosted zone
+    
     console.log("id: ", hostedZoneId);
     const hostedZone = await HostedZoneModel.find({ hostedZoneId });
     console.log("Hoisted Zone in deleete: ", hostedZone);
@@ -128,14 +128,14 @@ async function deleteUserHostedZone(req, res) {
     // Delete all non-required records from the hosted zone first
     await deleteNonRequiredRecords(hostedZoneId);
 
-    // Once all non-required records are deleted, delete the hosted zone
+    
     const params = {
       Id: hostedZoneId,
     };
 
     const response = await route53.deleteHostedZone(params).promise();
 
-    // Remove the hosted zone association from the user's list in the database
+  
     const ress = await HostedZoneModel.findByIdAndDelete(hostedZone[0]._id);
     console.log("ress: ", ress);
 
@@ -161,13 +161,13 @@ async function deleteNonRequiredRecords(hostedZoneId) {
       (record) => !["NS", "SOA"].includes(record.Type)
     );
 
-    // Prepare changes to delete non-required records
+  
     const changes = nonRequiredRecords.map((record) => ({
       Action: "DELETE",
       ResourceRecordSet: record,
     }));
 
-    // If there are no non-required records, return without making any changes
+    
     if (changes.length === 0) {
       console.log("No non-required records to delete.");
       return;
