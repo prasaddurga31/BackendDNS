@@ -9,6 +9,7 @@ const {
   createDNSRecordsFromJSON,
   deleteDNSRecords,
   listHostedZoneRecords,
+  createDNSRecordsFromUI,
 } = require("../controllers/DNSControllers");
 
 const router = express.Router();
@@ -19,6 +20,9 @@ router.get("/dns/records", listHostedZoneRecords);
 
 // creating HositedZone
 router.post("/dns", createUserHostedZone);
+
+// creating new records from UI
+router.post("/dns/ui", createDNSRecordsFromUI);
 
 // creating new records from CSV file
 router.post("/dns/csv", createDNSRecordsFromCSV);
